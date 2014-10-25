@@ -2,6 +2,7 @@
 #include<stdlib.h>
 #include<stdio.h>
 #include<algorithm>
+
 using namespace std;
 
 const int INF = (1<<28);
