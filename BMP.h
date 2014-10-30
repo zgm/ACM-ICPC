@@ -12,6 +12,7 @@
 using namespace std;
 
 
+
 void write8(FILE *f, int x){
 	unsigned char z = (unsigned char) x;
 	fwrite(&z,1,1,f);
