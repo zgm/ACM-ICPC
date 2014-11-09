@@ -1,6 +1,8 @@
 #include<iostream>
 #include<algorithm>
+
 using namespace std;
+
 
 class Area{
 	struct Node{
