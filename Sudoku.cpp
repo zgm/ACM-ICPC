@@ -5,6 +5,7 @@
 #include<cstring>
 using namespace std;
 
+
 const int n = 9, R = 3;
 
 class Sudoku{
