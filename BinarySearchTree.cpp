@@ -51,47 +51,39 @@ public:
     
     class InorderIterator{
         stack<Node*> s;
+        void pushNext(Node *root){
+            while(root!=NULL){ s.push(root); root=root->left; }
+        }
     public:
-        InorderIterator(Node *root=NULL){
-            while(root!=NULL){ s.push(root); root = root->left; }
-        }
-        InorderIterator(Tree t){
-            Node *cur = t.root;
-            while(cur!=NULL){ s.push(cur); cur=cur->left; }
-        }
+        InorderIterator(Node *root=NULL){ pushNext(root); }
+        InorderIterator(Tree t){ pushNext(t.root); }
         
         Node *hasNext(){
             if( s.empty() ) return NULL;
             Node *cur = s.top(); s.pop();
-            Node *right = cur->right;
-            while(right!=NULL){ s.push(right); right = right->left; }
+            pushNext(cur->right);
             return cur;
         }
     };
     
     class PostIterator{
         stack<Node*> s;
+        void pushNext(Node *root){
+            while(root!=NULL){
+                s.push(root);
+                if(root->left) root = root->left;
+                else root = root->right;
+            }
+        }
     public:
-        PostIterator(Node *root=NULL){
-            while(root!=NULL){ s.push(root); root = root->left; }
-        }
-        PostIterator(Tree t){
-            Node *cur = t.root;
-            while(cur!=NULL){ s.push(cur); cur=cur->left; }
-        }
+        PostIterator(Node *root=NULL){ pushNext(root); }
+        PostIterator(Tree t){ pushNext(t.root); }
         
         Node *hasNext(){
             if( s.empty() ) return NULL;
             Node *cur = s.top(); s.pop();
             if(!s.empty()){
-                if(s.top()->left==cur){
-                    Node *right = s.top()->right;
-                    while(right!=NULL){
-                        s.push(right);
-                        if(right->left) right=right->left;
-                        else right=right->right;
-                    }
-                }
+                if(s.top()->left==cur) pushNext(s.top()->right);
             }
             return cur;
         }
