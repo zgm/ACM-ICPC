@@ -30,8 +30,24 @@ public:
         printf("%d\n",root->val);
         print(root->right,deep+1);
     }
+    static void Inorder(Node *root){
+        while(root!=NULL){
+            if(root->left!=NULL){
+                Node *pre = root->left;
+                while(pre->right!=NULL && pre->right!=root) pre = pre->right;
+                if(pre->right==NULL){ pre->right = root; root = root->left; }
+                else{ pre->right = NULL; printf("%d ",root->val); root = root->right; }
+            }else{
+                printf("%d ",root->val);
+                root = root->right;
+            }
+        }
+        printf("\n");
+    }
     void insert(int val){ insert(root,val); }
     void print(int deep=0){ print(root,deep); }
+    void Inorder(){ Inorder(root); }
+    
     
     
     class PreIterator{
@@ -49,6 +65,7 @@ public:
         }
     };
     
+    
     class InorderIterator{
         stack<Node*> s;
         void pushNext(Node *root){
@@ -65,6 +82,7 @@ public:
             return cur;
         }
     };
+    
     
     class PostIterator{
         stack<Node*> s;
@@ -122,6 +140,7 @@ int main(){
     }
     printf("\n");
 
+    t.Inorder();
     return 0;
 }
 
