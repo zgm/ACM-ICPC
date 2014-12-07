@@ -1,6 +1,8 @@
 #include<iostream>
 #include<cstdio>
 #include<cstdlib>
+#include<vector>
+#include<string>
 using namespace std;
 
 
@@ -34,9 +36,60 @@ public:
         if(mn&1) return findMedian(A,m,B,n,mn/2+1);
         else return (findMedian(A,m,B,n,mn/2)+findMedian(A,m,B,n,mn/2+1))/2;
     }
+    
+    
+    string longestPalindrome(string s){
+        int n = s.length();
+        string t = "", result = "";
+        for(int i=0; i<n; i++){ t += '$'; t += s[i]; }
+        t += '$';
+        int m = 2*n+1;
+        
+        vector<int> len(m,0);
+        int x = 0, xlen = 0, mx = 0, mlen = 0;
+        for(int i=1; i<m; i++){
+            if(x+xlen>=i) len[i] = min(len[2*x-i],x+xlen-i);
+            while(0<i-len[i] && i+len[i]+1<m && t[i-len[i]-1]==t[i+len[i]+1]) len[i]++;
+            if( i+len[i]>x+xlen ){ x = i; xlen = len[i]; }
+            if(len[i]>mlen){ mx = i; mlen = len[i]; }
+        }
+        for(int i=(mx-mlen)/2; i<(mx+mlen)/2; i++) result += s[i];
+        return result;
+    }
+    
+    vector<vector<int> > threeSum(vector<int> &num){
+        vector<vector<int> > result;
+        vector<int> tmp(3,0);
+        unordered_set<vector<int> > st;
+        sort(num.begin(),num.end());
+        for(int i=0; i<num.size(); i++){
+            int j = i+1, k = num.size()-1;
+            while(j<k){
+                if(j>=i+2 && num[j-1]==num[j]){ j++; continue; }
+                int sum = num[i]+num[j]+num[k];
+                if(sum==0){
+                    tmp[0] = num[i]; tmp[1] = num[j]; tmp[2] = num[k];
+                    if(st.find(tmp)!=st.end()){
+                        result.push_back(tmp);
+                        st.insert(tmp);
+                    }
+                    j++; k--;
+                }else if(sum<0){
+                    j++;
+                }else{
+                    k--;
+                }
+            }
+        }
+        return result;
+    }
 };
 
 
 int main(){
+    //string s = "abcdedcfe";
+    string s = "a";
+    Solution r;
+    cout<<r.longestPalindrome(s)<<endl;
     return 0;
 }
