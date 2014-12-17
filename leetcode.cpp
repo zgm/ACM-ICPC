@@ -86,6 +86,7 @@ public:
 };
 
 
+
 int main(){
     //string s = "abcdedcfe";
     string s = "a";
