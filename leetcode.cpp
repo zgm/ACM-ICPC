@@ -91,6 +91,14 @@ public:
         }
         return maxD>=n-1;
     }
+    int jump(int A[], int n){
+        int step = 0, maxD = 0, nextD = 0;
+        for(int i=0; i<n; i++){
+            if(maxD<i){ step++; maxD = nextD; }
+            nextD = max( nextD, i+A[i] );
+        }
+        return step;
+    }
 };
 
 
