@@ -83,6 +83,14 @@ public:
         }
         return result;
     }
+    
+    bool canJump(int A[], int n){
+        int maxD = 0;
+        for(int i=0; i<n; i++){
+            if(maxD>=i) maxD = max( maxD, i+A[i] );
+        }
+        return maxD>=n-1;
+    }
 };
 
 
