@@ -57,7 +57,7 @@ public:
         return result;
     }
     
-    vector<vector<int> > threeSum(vector<int> &num){
+    /*vector<vector<int> > threeSum(vector<int> &num){
         vector<vector<int> > result;
         vector<int> tmp(3,0);
         unordered_set<vector<int> > st;
@@ -82,7 +82,7 @@ public:
             }
         }
         return result;
-    }
+    }*/
     
     bool canJump(int A[], int n){
         int maxD = 0;
@@ -99,14 +99,86 @@ public:
         }
         return step;
     }
+    
+    void MaxDiffK(int n, int A[], int K, int B[]){ // change A[] to B[], so that B[i]-B[i+1]<=K
+        int maxA = A[0];
+        for(int i=0; i<n; i++) maxA = max( maxA, A[i] );
+        int dp[n][maxA+1];
+        for(int i=0; i<n; i++){
+            for(int j=0; j<=maxA; j++){
+                if(i==0){
+                    dp[i][j] = abs(A[i]-j);
+                }else{
+                    dp[i][j] = -1;
+                    for(int d=-K; d<=K; d++){
+                        if(0>j+d || j+d>maxA) continue;
+                        if( dp[i][j]==-1 || dp[i][j]>dp[i-1][j+d])
+                            dp[i][j] = dp[i-1][j+d];
+                    }
+                    dp[i][j] += abs(A[i]-j);
+                }
+            }
+        }
+        
+        int minDiff = dp[n-1][0];
+        for(int i=0; i<=maxA; i++){
+            if( minDiff>dp[n-1][i] ){
+                minDiff = dp[n-1][i];
+                B[n-1] = i;
+            }
+        }
+        printf("the min diff is %d\n",minDiff);
+        for(int i=n-2; i>=0; i--){
+            for(int d=-K; d<=K; d++){
+                if( dp[i][B[i+1]+d]+abs(A[i+1]-B[i+1])==dp[i+1][B[i+1]] ){
+                    B[i] = B[i+1]+d;
+                    break;
+                }
+            }
+        }
+        for(int i=0; i<n; i++) printf("%d ",A[i]); printf("\n");
+        for(int i=0; i<n; i++) printf("%d ",B[i]); printf("\n");
+    }
+    
+    struct Node{
+        int key, count;
+        Node(int value=0){ key=value; count=1; }
+    }p[10000];
+    void build_tree(int s, int t, int x[], int id){
+        if(s==t){ p[id].key = x[s]; p[id].count = 1; return; }
+        
+        int mid = (s+t)/2;
+        build_tree(s,mid,x,id<<1);
+        build_tree(mid+1,t,x,(id<<1)+1);
+        p[id].count = p[id<<1].count + p[(id<<1)+1].count;
+    }
+    int getKth(int s, int t, int id, int K){
+        p[id].count--;
+        if(s==t) return p[id].key;
+        
+        int mid = (s+t)/2;
+        if(p[id<<1].count>=K) return getKth(s,mid,id<<1,K);
+        else return getKth(mid+1,t,(id<<1)+1,K-p[id<<1].count);
+    }
 };
 
 
 
 int main(){
-    //string s = "abcdedcfe";
-    string s = "a";
     Solution r;
+    
+    int N = 9, x[] = {1,2,3,4,5,6,7,8,9}, count[] = {8,4,4,4,1,2,1,0,0}; // 9,5,6,7,2,4,3,1,8
+    r.build_tree(0,N-1,x,1);
+    for(int i=0; i<N; i++){
+        printf("%d ",r.getKth(0,N-1,1,count[i]+1));
+    }
+    printf("\n");
+    
+    
+    string s = "abcdedcfe";
     cout<<r.longestPalindrome(s)<<endl;
+    
+    int n = 10, A[] = {1,2,1,2,1,8,9,8,9,8}, K = 1, B[10] = {0};
+    r.MaxDiffK(n,A,K,B);
     return 0;
 }
